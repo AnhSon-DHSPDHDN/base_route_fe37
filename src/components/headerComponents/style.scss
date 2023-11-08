@@ -1,0 +1,28 @@
+.header-component {
+  width: 100%;
+  background-color: aqua;
+
+  &__menu {
+    display: flex;
+    list-style: none;
+    column-gap: 30px;
+    margin: 0;
+
+    &-item {
+      padding: 5px 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: blue;
+      }
+
+      &--active{
+        background-color: blue;
+      }
+
+      &--warning{
+        background-color: yellow;
+      }
+    }
+  }
+}
