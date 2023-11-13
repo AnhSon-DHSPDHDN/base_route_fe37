@@ -1,31 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
-import HeaderComponent from "./components/headerComponents";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "./pages/homePage";
-import AboutPage from "./pages/aboutPage";
-import TopicPage from "./pages/topicPage";
-import NotFoundPage from "./pages/notFound";
-import { APP_ROUTER } from "./constants/appRouter";
-import SinglePage from "./pages/singerPage";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  actDecrement,
+  actIncrement,
+} from "./redux/features/counter/counterSlice";
+import HeaderComponent from "./components/HeaderComponent";
+import { actFetchAllTask } from "./redux/features/tasks/tasksSlice";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <HeaderComponent />
+  const count = useSelector((state) => state.counter.count);
+  const { allTask, isLoading } = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
 
-        <Routes>
-          <Route path={APP_ROUTER.HOME} element={<HomePage />} />
-          <Route path={APP_ROUTER.ABOUT} element={<AboutPage />} />
-          <Route path={APP_ROUTER.TOPIC} element={<TopicPage />} />
-          <Route path={APP_ROUTER.SINGER_DETAIL} element={<SinglePage />} />
-          <Route path={APP_ROUTER.NOT_FOUND} element={<NotFoundPage />} />
-          <Route path="/" element={<Navigate to={APP_ROUTER.HOME} replace />} />
-          <Route path="*" element={<Navigate to={APP_ROUTER.NOT_FOUND} />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+  const handleIncrement = () => {
+    dispatch(actIncrement(5));
+  };
+
+  const handleDecrement = () => {
+    dispatch(actDecrement(7));
+  };
+
+  useEffect(() => {
+    dispatch(actFetchAllTask());
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <div className="App">
+      <HeaderComponent />
+      <button onClick={handleIncrement}>Increment</button>
+      <h3>{count}</h3>
+      <button onClick={handleDecrement}>Decrement</button>
+      <hr />
+      <h1>List Task</h1>
+      {isLoading && <div>LOADING...</div>}
+      {allTask.map((task) => {
+        return <div>{task.taskName}</div>;
+      })}
+    </div>
   );
 }
 
